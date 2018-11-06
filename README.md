@@ -2,7 +2,7 @@
 ![Alt text](CourseImage/tuggdwu.jpg?raw=true "Optional Title")
 
 # Galaxy Shooter
-My code might differ from the instructor's code since I've completed the challenges and left my version of solving the problems.
+My code will differ in some parts from the instructor's code since I've completed the challenges and left my version of solving the problems.
 
 Topics covered in this project : 
  - Create power-ups including triple shots, laser beams, speed boosts, and shields
