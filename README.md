@@ -4,6 +4,8 @@
 # Galaxy Shooter
 My code will differ in some parts from the instructor's code since I've completed the challenges and left my version of solving the problems.
 
+The C# scripts are in Assets/Galaxy Shooter/Scripts
+
 Topics covered in this project : 
  - Create power-ups including triple shots, laser beams, speed boosts, and shields
  - Create enemies with basic AI behavior
