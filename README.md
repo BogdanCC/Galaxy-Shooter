@@ -17,4 +17,13 @@ Topics covered in this project :
  - Work with Unity’s Team Collaboration service
  
  Course link : https://www.udemy.com/the-ultimate-guide-to-game-development-with-unity/
+ 
+ # Gameplay screenshots
+ ![Alt text](CourseImage/Screenshot_1.png?raw=true "Optional Title")
+ 
+ ![Alt text](CourseImage/Screenshot_3.png?raw=true "Optional Title")
+ 
+ ![Alt text](CourseImage/Screenshot_4.png?raw=true "Optional Title")
+ 
+ ![Alt text](CourseImage/Screenshot_5.png?raw=true "Optional Title")
 
