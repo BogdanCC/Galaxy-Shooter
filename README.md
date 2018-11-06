@@ -1,6 +1,8 @@
 # The Ultimate Guide to Game Development with Unity
 ![Alt text](CourseImage/tuggdwu.jpg?raw=true "Optional Title")
 
+ Course link : https://www.udemy.com/the-ultimate-guide-to-game-development-with-unity/
+ 
 # Galaxy Shooter
 My code will differ in some parts from the instructor's code since I've completed the challenges and left my version of solving the problems.
 
@@ -15,8 +17,6 @@ Topics covered in this project :
  - User Interface (Start screen, Game pause etc)
  - Coroutines
  - Work with Unity’s Team Collaboration service
- 
- Course link : https://www.udemy.com/the-ultimate-guide-to-game-development-with-unity/
  
  # Gameplay screenshots
  ![Alt text](CourseImage/Screenshot_1.png?raw=true "Optional Title")
