@@ -17,6 +17,7 @@ public class Constants : MonoBehaviour {
     public const string GO_GAME_MANAGER_NAME = "GameManager";
     public const string GO_SPAWN_MANAGER_NAME = "SpawnManager";
     public const string GO_PAUSE_MENU_NAME = "PauseMenuPanel";
+    public const string GO_GALAXY = "Galaxy";
     // Prefab name
     public const string PLAYER_ONE_PREFAB = "Player1(Clone)";
     public const string PLAYER_TWO_PREFAB = "Player2(Clone)";

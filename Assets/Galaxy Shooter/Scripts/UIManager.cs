@@ -19,6 +19,7 @@ public class UIManager : MonoBehaviour {
     public int highScore;
 
     private GameManager gameManager;
+    private MeshRenderer galaxyMeshRenderer;
     private Player player;
 
     private const string HIGH_SCORE_KEY = "High Score";
@@ -29,6 +30,12 @@ public class UIManager : MonoBehaviour {
     private void Start()
     {
         gameManager = GameObject.Find(Constants.GO_GAME_MANAGER_NAME).GetComponent<GameManager>();
+#if UNITY_ANDROID
+        galaxyMeshRenderer = GameObject.Find(Constants.GO_GALAXY).GetComponent<MeshRenderer>();
+        Camera.main.backgroundColor = UnityEngine.Color.black;
+        galaxyMeshRenderer.enabled = false;
+#endif
+
         highScore = PlayerPrefs.GetInt(HIGH_SCORE_KEY, 0);
         highScoreText.text = HIGH_SCORE + highScore;
         ResetScore();
