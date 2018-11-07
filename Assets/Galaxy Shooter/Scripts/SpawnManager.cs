@@ -27,14 +27,16 @@ public class SpawnManager : MonoBehaviour {
     [SerializeField]
     private int powerupSpawnFrequency = 5;
 
-    private void Start()
-    {
+    private GameManager gameManager;
+
+    private void Start() {
         enemyAI = _enemy.GetComponent<EnemyAI>();
-        uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
-        if (enemyAI != null)
-        {
+        uiManager = GameObject.Find(Constants.GO_CANVAS_NAME).GetComponent<UIManager>();
+        gameManager = GameObject.Find(Constants.GO_GAME_MANAGER_NAME).GetComponent<GameManager>();
+        if (enemyAI != null) {
             enemyAI.Speed = 3.0f;
-        }     
+        }
+        
     }
 
     public void SetEnemySpeed(float value)
@@ -68,7 +70,14 @@ public class SpawnManager : MonoBehaviour {
             // Instantiate the powerup
             Instantiate(_powerups[_randPowerup], new Vector3(_randPowerupX, 5.70f, 0.0f), Quaternion.identity);
 
-            // Wait 5 seconds and do this all over again
+            // If co-op mode, spawn more powerups
+            if (gameManager != null) {
+                if (gameManager.isCoOpMode) {
+                    powerupSpawnFrequency = 3;
+                }
+            }
+
+            // Wait 5 (or 3) seconds and do this all over again
             yield return new WaitForSeconds(powerupSpawnFrequency);
         }   
     }

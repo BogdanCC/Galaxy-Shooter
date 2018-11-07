@@ -15,13 +15,13 @@ public class Powerup : MonoBehaviour {
     {
         switch (powerupID)
         {
-            case 0:
+            case Constants.TRIPLE_SHOT_ID:
                 _speed = 3.0f;
                 break;
-            case 1:
+            case Constants.SPEED_POWERUP_ID:
                 _speed = 1.5f;
                 break;
-            case 2:
+            case Constants.SHIELD_POWERUP_ID:
                 _speed = 2.0f;
                 break;
             default:
@@ -42,7 +42,7 @@ public class Powerup : MonoBehaviour {
     private void OnTriggerEnter2D(Collider2D other)
     {
         // If we collided with the Player
-        if(other.tag == "Player")
+        if(other.tag == Constants.TAG_PLAYER)
         {
             // Access the player
             Player player = other.GetComponent<Player>();

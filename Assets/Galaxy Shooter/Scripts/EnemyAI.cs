@@ -7,12 +7,12 @@ public class EnemyAI : MonoBehaviour {
     [SerializeField]
     private float _speed;
     public float Speed { get { return _speed; } set { _speed = value; } }
-    private int _lifeDamage = 1;
+    private const int LIFE_DAMAGE = 1;
+    private const int ENEMY_DESTROYED_POINTS = 10;
 
     [SerializeField]
     private GameObject _enemyExplosion;
     private UIManager uiManager;
-    private int enemyDestroyedPoints;
     private GameManager gameManager;
     private SpawnManager spawnManager;
 
@@ -20,13 +20,11 @@ public class EnemyAI : MonoBehaviour {
     private AudioClip explosionSound;
 
     // Initialise things
-    void Start()
-    {
-        uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
-        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-        spawnManager = GameObject.Find("SpawnManager").GetComponent<SpawnManager>();
-        enemyDestroyedPoints = 10;
-}
+    void Start() {
+        uiManager = GameObject.Find(Constants.GO_CANVAS_NAME).GetComponent<UIManager>();
+        gameManager = GameObject.Find(Constants.GO_GAME_MANAGER_NAME).GetComponent<GameManager>();
+        spawnManager = GameObject.Find(Constants.GO_SPAWN_MANAGER_NAME).GetComponent<SpawnManager>();
+    }
     // Update is called once per frame
     void Update () {
        
@@ -46,24 +44,24 @@ public class EnemyAI : MonoBehaviour {
     private void OnTriggerEnter2D(Collider2D other)
     {
         // If collision with player - inflict damage, destroy this object
-        if(other.tag == "Player")
+        if(other.tag == Constants.TAG_PLAYER)
         {
             // Get a Player.cs script handle
             Player player = other.GetComponent<Player>();
             if(player != null)
             {
                 // Use Player.cs's InflictDamage method to inflict damage to player
-                player.InflictDamage(_lifeDamage);
+                player.InflictDamage(LIFE_DAMAGE);
                 OnEnemyDestroyed();
             }
         }
         // If collision with laser - destroy laser, destroy this object
-        if(other.tag == "Laser")
+        if(other.tag == Constants.TAG_LASER)
         {
             // Update score and increase difficulty if it's the case
             if (uiManager != null && spawnManager != null)
             {
-                uiManager.UpdateScore(enemyDestroyedPoints);
+                uiManager.UpdateScore(ENEMY_DESTROYED_POINTS);
                 CheckScoreAndIncreaseSpeed(uiManager.score);
             }
             
@@ -81,7 +79,6 @@ public class EnemyAI : MonoBehaviour {
             explosionSound.UnloadAudioData();
             AudioSource.PlayClipAtPoint(explosionSound, Camera.main.transform.position, 1f);
         }
-        
         Instantiate(_enemyExplosion, transform.position, Quaternion.identity);
         Destroy(this.gameObject);
     }

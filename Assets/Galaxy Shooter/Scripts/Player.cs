@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityStandardAssets.CrossPlatformInput;
 
 public class Player : MonoBehaviour
 {
@@ -22,6 +23,8 @@ public class Player : MonoBehaviour
     [SerializeField]
     private float _speedBoost = 1.5f;
     private float _calculatedSpeed;
+    private float horizontalInput;
+    private float verticalInput;
 
     // Shooting cooldown variables
     [SerializeField]
@@ -38,10 +41,9 @@ public class Player : MonoBehaviour
     public bool hasSpeedBoost = false;
     public bool hasShield = false;
 
-    // Powerups IDs
-    private const int TRIPLE_SHOT_ID = 0;
-    private const int SPEED_POWERUP_ID = 1;
-    private const int SHIELD_POWERUP_ID = 2;
+    // Player one or two booleans
+    public bool isPlayerOne = false;
+    public bool isPlayerTwo = false;
 
     private UIManager uiManager;
     private GameManager gameManager;
@@ -54,27 +56,41 @@ public class Player : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
-        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-        spawnManager = GameObject.Find("SpawnManager").GetComponent<SpawnManager>();
+        uiManager = GameObject.Find(Constants.GO_CANVAS_NAME).GetComponent<UIManager>();
+        gameManager = GameObject.Find(Constants.GO_GAME_MANAGER_NAME).GetComponent<GameManager>();
+        spawnManager = GameObject.Find(Constants.GO_SPAWN_MANAGER_NAME).GetComponent<SpawnManager>();
         audioSource = GetComponent<AudioSource>();
         _playerLives = 3;
         if (uiManager != null)
         {
-            uiManager.UpdateLives(_playerLives);
+            if (gameManager.isCoOpMode) {
+                uiManager.UpdateLives(_playerLives, Constants.PLAYER_ONE_ID);
+                uiManager.UpdateLives(_playerLives, Constants.PLAYER_TWO_ID);
+            } else {
+                uiManager.UpdateLives(_playerLives, 0);
+            }          
         }
-        spawnManager.StartSpawnRoutine();
+        if (isPlayerOne) spawnManager.StartSpawnRoutine();
     }
 
     // Update is called once per frame
     void Update()
     {
-        // If space key is pressed
-        // spawn laser at player position
-        if ((Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)) && Time.time > _nextFire)
-        {
+#if UNITY_ANDROID
+
+        if(CrossPlatformInputManager.GetButtonDown("Jump") && Time.time > _nextFire && Time.timeScale > 0) {
             Shoot();
         }
+#else
+        // If space key is pressed
+        // spawn laser at player position
+        if (Input.GetKeyDown(KeyCode.Space) && Time.time > _nextFire && isPlayerOne && Time.timeScale > 0) {
+            Shoot();
+        }
+        if (Input.GetMouseButtonDown(0) && Time.time > _nextFire && isPlayerTwo && Time.timeScale > 0) {
+            Shoot();
+        }
+#endif
     }
 
     // Update method for physics calculations
@@ -94,10 +110,21 @@ public class Player : MonoBehaviour
         {
             _calculatedSpeed = _speed;
         }
-        // Get horizontal and vertical inputs from keyboard
-        float horizontalInput = Input.GetAxis("Horizontal");
-        float verticalInput = Input.GetAxis("Vertical");
-
+        if(!gameManager.isCoOpMode || isPlayerOne) {
+            // Get horizontal and vertical inputs from "W, A, S, D"
+#if UNITY_ANDROID
+            horizontalInput = CrossPlatformInputManager.GetAxis("Horizontal");
+            verticalInput = CrossPlatformInputManager.GetAxis("Vertical");
+#else
+            horizontalInput = Input.GetAxis(Constants.HORIZONTAL_ONE);
+            verticalInput = Input.GetAxis(Constants.VERTICAL_ONE);
+#endif
+        } else {
+            // Get horizontal and vertical inputs from "UP, LEFT, DOWN, RIGHT"
+            horizontalInput = Input.GetAxis(Constants.HORIZONTAL_TWO);
+            verticalInput = Input.GetAxis(Constants.VERTICAL_TWO);
+        } 
+            
         // Translate the position accordingly
         transform.Translate(Vector3.right * _calculatedSpeed * horizontalInput * Time.deltaTime);
         transform.Translate(Vector3.up * _calculatedSpeed * verticalInput * Time.deltaTime);
@@ -151,7 +178,7 @@ public class Player : MonoBehaviour
         // Set the correct powerup boolean true given the powerupID (from Powerup.cs)
         switch (powerupID)
         {
-            case TRIPLE_SHOT_ID:
+            case Constants.TRIPLE_SHOT_ID:
                 // If coroutine already active, restart it
                 if (canTripleShot) {
                     StopCoroutine(tripleShotCD);
@@ -164,7 +191,7 @@ public class Player : MonoBehaviour
                 }
                 break;
 
-            case SPEED_POWERUP_ID:
+            case Constants.SPEED_POWERUP_ID:
                 // If coroutine already active, restart it
                 if (hasSpeedBoost) {
                     StopCoroutine(speedCD);
@@ -177,7 +204,7 @@ public class Player : MonoBehaviour
                 }            
                 break;
 
-            case SHIELD_POWERUP_ID:
+            case Constants.SHIELD_POWERUP_ID:
                 // If coroutine already active, restart it
                 if (hasShield) {
                     StopCoroutine(shieldsCD);
@@ -211,20 +238,19 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(5.0f);
         EnableShields(false);
     }
-    
+
     // Method to inflict damage to player
-    public void InflictDamage(int damage)
-    {
+    public void InflictDamage(int damage) {
         // If player has shield, destroy it and return early
-        if(hasShield) {
+        if (hasShield) {
             EnableShields(false);
             return;
         }
-        
+
         // Inflict damage
         _playerLives -= damage;
 
-        // Damage engins
+        // Damage engines
         switch (_playerLives) {
             case 2:
                 engineFires[0].SetActive(true);
@@ -234,8 +260,19 @@ public class Player : MonoBehaviour
                 break;
         };
 
-        // Update lives image
-        uiManager.UpdateLives(_playerLives);
+        // If is coop mode, update the right lives sprites
+        if(gameManager.isCoOpMode) {
+            if (isPlayerOne) {
+                // Update lives image
+                uiManager.UpdateLives(_playerLives, Constants.PLAYER_ONE_ID);
+            }
+            if (isPlayerTwo) {
+                uiManager.UpdateLives(_playerLives, Constants.PLAYER_TWO_ID);
+            }
+        } else {
+            uiManager.UpdateLives(_playerLives, 0);
+        }
+        
         // If life is less than 1, destroy player
         if (_playerLives < 1)
         {
@@ -246,10 +283,21 @@ public class Player : MonoBehaviour
     // Method to destroy player & show the animation
     public void OnPlayerDestroyed()
     {
-        gameManager.gameOver = true;
-        Instantiate(_playerExplosion, transform.position, Quaternion.identity);
-        spawnManager.StopSpawnRoutine();
-        Destroy(this.gameObject);      
+        if(!gameManager.isCoOpMode) {
+            gameManager.gameOver = true;
+            Instantiate(_playerExplosion, transform.position, Quaternion.identity);
+            spawnManager.StopSpawnRoutine();
+            Destroy(this.gameObject);
+        } else {
+            Instantiate(_playerExplosion, transform.position, Quaternion.identity);
+            if ((isPlayerOne && GameObject.Find(Constants.PLAYER_TWO_PREFAB) == null) || 
+                (isPlayerTwo && GameObject.Find(Constants.PLAYER_ONE_PREFAB) == null)) {
+                spawnManager.StopSpawnRoutine();
+                gameManager.gameOver = true;
+            }
+            Destroy(this.gameObject);
+        }
+        
     }
 
     // Enable shields

@@ -8,17 +8,29 @@ public class UIManager : MonoBehaviour {
     // An array of Sprite objects to hold the lives image sprites
     public Sprite[] livesSprites;
     public Image livesImage;
+    public Image livesImage2;
     public Text scoreText;
     public Text highScoreText;
     public GameObject TitleScreen;
+    public GameObject spaceText;
+    public GameObject escText;
+
     public int score;
     public int highScore;
+
+    private GameManager gameManager;
+    private Player player;
+
+    private const string HIGH_SCORE_KEY = "High Score";
+    private const string HIGH_SCORE = "High Score: ";
+    private const string SCORE = "Score: ";
 
     // Initialising scores and UI text on start()
     private void Start()
     {
-        highScore = 0;
-        highScoreText.text = "High Score: " + highScore;
+        gameManager = GameObject.Find(Constants.GO_GAME_MANAGER_NAME).GetComponent<GameManager>();
+        highScore = PlayerPrefs.GetInt(HIGH_SCORE_KEY, 0);
+        highScoreText.text = HIGH_SCORE + highScore;
         ResetScore();
     }
 
@@ -26,13 +38,23 @@ public class UIManager : MonoBehaviour {
     public void ResetScore()
     {
         score = 0;
-        scoreText.text = "Score: " + score;
+        scoreText.text = SCORE + score;
     }
 
     // Method to update the lives image given the player life (value)
-    public void UpdateLives(int value)
+    public void UpdateLives(int value, int playerId)
     {
-        livesImage.sprite = livesSprites[value];
+        switch (playerId) {
+            case Constants.PLAYER_ONE_ID:
+                livesImage2.sprite = livesSprites[value];
+                break;
+            case Constants.PLAYER_TWO_ID:
+                livesImage.sprite = livesSprites[value];
+                break;
+            default:
+                livesImage.sprite = livesSprites[value];
+                break;
+        }
     }
 
     // Method to update the current score and high score
@@ -40,25 +62,23 @@ public class UIManager : MonoBehaviour {
     {
         // Increase the score by the points passed in, update the UI text
         score += points;
-        scoreText.text = "Score: " + score;
+        scoreText.text = SCORE + score;
 
         // If current score is higher than highscore, set it to highscore
         if(score > highScore) {
             highScore = score;
-            highScoreText.text = "High Score: " + highScore;
+            highScoreText.text = HIGH_SCORE + highScore;
+            PlayerPrefs.SetInt(HIGH_SCORE_KEY, highScore);
         }
     }
 
     // Method to show or hide the title screen
-    public void ShowTitleScreen(bool value)
-    {
-        if(value) {
-            // Show title screen
-            TitleScreen.SetActive(true);       
-        } else {
-            // Hide title screen
-            TitleScreen.SetActive(false);
-            ResetScore();
-        }
+    public void ShowTitleScreen(bool value) {
+
+        TitleScreen.SetActive(value);
+        spaceText.SetActive(value);
+        escText.SetActive(value);
+
+        if (!value) ResetScore();
     }
 }
