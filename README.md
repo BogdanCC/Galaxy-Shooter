@@ -5,9 +5,10 @@
 ###### Here is the [course link](https://www.udemy.com/the-ultimate-guide-to-game-development-with-unity/).
  
 # Galaxy Shooter
-My code will differ in some parts from the instructor's code since I've completed the challenges and left my version of solving the problems.
-
 **You can try this game on Android by downloading and installing [this apk](https://drive.google.com/file/d/1eNkFqTanIo-mps2XY46VuARYBo3-V0Te/view).**
+Download directly on your android phone and install, or copy the apk file on your android phone from your computer and install.
+
+My code will differ in some parts from the instructor's code since I've completed the challenges and left my version of solving the problems.
 
 The **C#** scripts are in **Assets/Galaxy Shooter/Scripts**
 
