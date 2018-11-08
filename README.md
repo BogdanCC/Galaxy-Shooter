@@ -23,13 +23,18 @@ The **C#** scripts are in **Assets/Galaxy Shooter/Scripts**
  - Work with Unity’s Team Collaboration service
  
  # Gameplay screenshots
- ![Alt text](CourseImage/Screenshot_6.png?raw=true "Optional Title")
  
- ![Alt text](CourseImage/Screenshot_7.png?raw=true "Optional Title")
+ ## Android
  
- ![Alt text](CourseImage/Screenshot_8.png?raw=true "Optional Title")
+ ![Alt text](CourseImage/Screenshot_2018-11-08-11-27-54.png?raw=true "Optional Title")
  
- ![Alt text](CourseImage/Screenshot_9.png?raw=true "Optional Title")
+ ![Alt text](CourseImage/Screenshot_2018-11-08-11-28-05.png?raw=true "Optional Title")
+ 
+ ![Alt text](CourseImage/Screenshot_2018-11-08-11-29-40.png?raw=true "Optional Title")
+ 
+ ![Alt text](CourseImage/Screenshot_2018-11-08-11-29-18.png?raw=true "Optional Title")
+ 
+ ## Co-Op PC
  
  ![Alt text](CourseImage/Screenshot_10.png?raw=true "Optional Title")
 
