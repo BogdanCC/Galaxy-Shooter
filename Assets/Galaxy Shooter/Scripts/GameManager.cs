@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour {
 
     public bool isCoOpMode = false;
     public bool gameOver;
+    private bool isLoading = false;
     public GameObject player;
     public GameObject coOpPlayerOne;
     public GameObject coOpPlayerTwo;
@@ -32,7 +33,7 @@ public class GameManager : MonoBehaviour {
     private void Update() {
         // If gameOver is true show the title screen
         if (gameOver) {
-            if (UIManager != null && spawnManager != null)
+            if (UIManager != null && spawnManager != null && !isLoading)
             {
                 UIManager.ShowTitleScreen(true);
                 spawnManager.SetEnemySpeed(3.0f);
@@ -40,30 +41,13 @@ public class GameManager : MonoBehaviour {
             }
             // If 'esc' is pressed, go back to main menu
             if(Input.GetKeyDown(KeyCode.Escape)) {
+                UIManager.ShowTitleScreen(false);
                 BackToMainMenu();
             }
 
             // If 'space' is pressed, hide the title screen, instantiate the player and set gameOver to false
             if (Input.GetKeyDown(KeyCode.Space)) {
-                // Disable Title Screen
-                UIManager.ShowTitleScreen(false);
-                // Instantiate player(s) depending on game mode (single or co-op)
-                switch(SceneManager.GetActiveScene().buildIndex) {
-                    case Constants.SCENE_SINGLE_PLAYER:
-                        isCoOpMode = false;
-                        Instantiate(player, Vector3.zero, Quaternion.identity);
-                        break;
-                    case Constants.SCENE_CO_OP:
-                        isCoOpMode = true;
-                        Instantiate(coOpPlayerOne);
-                        Instantiate(coOpPlayerTwo);
-                        break;
-                    default:
-                        // do nothing;
-                        break;
-                }
-                
-                gameOver = false;
+                StartGame();
             }
         } else {
             // If game is not over and we press escape
@@ -80,14 +64,16 @@ public class GameManager : MonoBehaviour {
 
     // Method to load main menu scene
     public void BackToMainMenu() {
+        isLoading = true;
         StartCoroutine(LoadAsyncScene(Constants.SCENE_MAIN_MENU));
     }
     private IEnumerator LoadAsyncScene(int sceneIndex) {
+        UIManager.ShowTitleScreen(false);
+        UIManager.LoadingScreen();
         // The Application loads the Scene in the background as the current Scene runs.
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneIndex);
-        
         // Wait until the asynchronous scene fully loads
-        while(!asyncLoad.isDone) {
+        while (!asyncLoad.isDone) {
             yield return null;
         }
     }
@@ -104,5 +90,25 @@ public class GameManager : MonoBehaviour {
         Time.timeScale = 0;
         pauseMenuAnimator.SetTrigger(Constants.PAUSED);
     }
+    public void StartGame() {
+        // Disable Title Screen
+        UIManager.ShowTitleScreen(false);
+        // Instantiate player(s) depending on game mode (single or co-op)
+        switch (SceneManager.GetActiveScene().buildIndex) {
+            case Constants.SCENE_SINGLE_PLAYER:
+                isCoOpMode = false;
+                Instantiate(player, Vector3.zero, Quaternion.identity);
+                break;
+            case Constants.SCENE_CO_OP:
+                isCoOpMode = true;
+                Instantiate(coOpPlayerOne);
+                Instantiate(coOpPlayerTwo);
+                break;
+            default:
+                // do nothing;
+                break;
+        }
 
+        gameOver = false;
+    }
 }

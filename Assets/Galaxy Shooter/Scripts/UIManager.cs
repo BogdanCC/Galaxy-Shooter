@@ -14,6 +14,7 @@ public class UIManager : MonoBehaviour {
     public GameObject TitleScreen;
     public GameObject spaceText;
     public GameObject escText;
+    public GameObject pauseMenuPanel;
 
     public int score;
     public int highScore;
@@ -21,10 +22,12 @@ public class UIManager : MonoBehaviour {
     private GameManager gameManager;
     private MeshRenderer galaxyMeshRenderer;
     private Player player;
+    public GameObject loadingText;
 
     private const string HIGH_SCORE_KEY = "High Score";
     private const string HIGH_SCORE = "High Score: ";
     private const string SCORE = "Score: ";
+    
 
     // Initialising scores and UI text on start()
     private void Start()
@@ -35,7 +38,7 @@ public class UIManager : MonoBehaviour {
         Camera.main.backgroundColor = UnityEngine.Color.black;
         galaxyMeshRenderer.enabled = false;
 #endif
-
+        
         highScore = PlayerPrefs.GetInt(HIGH_SCORE_KEY, 0);
         highScoreText.text = HIGH_SCORE + highScore;
         ResetScore();
@@ -87,5 +90,10 @@ public class UIManager : MonoBehaviour {
         escText.SetActive(value);
 
         if (!value) ResetScore();
+    }
+
+    public void LoadingScreen() {
+        pauseMenuPanel.SetActive(false);
+        loadingText.SetActive(true);
     }
 }
