@@ -1,5 +1,4 @@
 # The Ultimate Guide to Game Development with Unity
-
 ![Alt text](CourseImage/tuggdwu.jpg?raw=true "Optional Title")
 
 ###### Here is the [course link](https://www.udemy.com/the-ultimate-guide-to-game-development-with-unity/).
