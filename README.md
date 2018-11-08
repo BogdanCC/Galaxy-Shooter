@@ -5,6 +5,9 @@
 ###### Here is the [course link](https://www.udemy.com/the-ultimate-guide-to-game-development-with-unity/).
  
 # Galaxy Shooter
+
+## Try on Android
+
 **You can try this game on Android by downloading and installing [this apk](https://drive.google.com/file/d/1eNkFqTanIo-mps2XY46VuARYBo3-V0Te/view).**
 Download directly on your android phone and install, or copy the apk file on your android phone from your computer and install.
 
@@ -21,6 +24,9 @@ The **C#** scripts are in **Assets/Galaxy Shooter/Scripts**
  - User Interface (Start screen, Game pause etc)
  - Coroutines
  - Work with Unity’s Team Collaboration service
+ - Porting the game to Android
+ - Scene loading
+ - Saving and loading data (score) using PlayerPrefs
  
  # Gameplay screenshots
  
